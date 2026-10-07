@@ -1,17 +1,291 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCOCAM</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
-        header { background: #333; color: white; padding: 10px 0; text-align: center; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCOCAM</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #111;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 55% 38%, rgba(241, 239, 216, 0.98) 0%, rgba(223, 222, 199, 0.78) 18%, transparent 43%),
+        radial-gradient(circle at 23% 23%, rgba(42, 86, 111, 0.92) 0%, rgba(48, 86, 103, 0.72) 23%, transparent 49%),
+        radial-gradient(circle at 80% 70%, rgba(101, 89, 75, 0.75) 0%, rgba(78, 72, 68, 0.45) 28%, transparent 53%),
+        linear-gradient(135deg, #173a4e 0%, #6c817f 34%, #d7d6bf 53%, #857b70 76%, #171a1d 100%);
+      position: relative;
+    }
+
+    /* Soft blurred overlay to reproduce the hazy photographic background. */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -40px;
+      background:
+        radial-gradient(ellipse at 35% 90%, rgba(28, 48, 44, .65), transparent 45%),
+        radial-gradient(ellipse at 100% 20%, rgba(217, 214, 186, .38), transparent 40%);
+      filter: blur(24px);
+      pointer-events: none;
+    }
+
+    .page {
+      position: relative;
+      min-height: 100vh;
+      padding: 34px 6.5vw 40px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 38px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -.4px;
+      min-width: 132px;
+    }
+
+    .brand-mark {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #111;
+      border-radius: 2px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #111;
+      top: 3px;
+      left: 3px;
+    }
+
+    .search {
+      display: flex;
+      width: 124px;
+      height: 18px;
+      margin-left: 0;
+      opacity: .72;
+    }
+
+    .search input {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid rgba(0,0,0,.28);
+      border-right: 0;
+      border-radius: 3px 0 0 3px;
+      background: rgba(255,255,255,.14);
+      padding: 0 7px;
+      font-size: 6px;
+      outline: none;
+      color: #222;
+    }
+
+    .search input::placeholder {
+      color: #4d5758;
+    }
+
+    .search button {
+      width: 21px;
+      border: 0;
+      border-radius: 0 3px 3px 0;
+      background: rgba(0,0,0,.72);
+      color: white;
+      font-size: 8px;
+      cursor: pointer;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 52px;
+      margin-left: auto;
+      font-size: 8px;
+      letter-spacing: .25px;
+    }
+
+    nav a {
+      color: #171717;
+      text-decoration: none;
+      transition: opacity .2s ease;
+    }
+
+    nav a:hover {
+      opacity: .55;
+    }
+
+    .join {
+      border: 1px solid rgba(0,0,0,.42);
+      padding: 4px 8px;
+      border-radius: 3px;
+    }
+
+    main {
+      min-height: calc(100vh - 90px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      width: min(520px, 88vw);
+      margin-top: -10px;
+    }
+
+    h1 {
+      font-size: clamp(30px, 4.4vw, 42px);
+      line-height: 1;
+      font-weight: 400;
+      letter-spacing: 8px;
+      margin-bottom: 10px;
+    }
+
+    .description {
+      width: 245px;
+      margin: 0 auto 20px;
+      font-size: 6px;
+      line-height: 1.45;
+      letter-spacing: .1px;
+      color: rgba(20, 20, 20, .72);
+    }
+
+    .learn-more {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 64px;
+      height: 18px;
+      padding: 0 11px;
+      border: 0;
+      border-radius: 20px;
+      background: #050505;
+      color: white;
+      text-decoration: none;
+      font-size: 7px;
+      letter-spacing: .1px;
+      transition: transform .2s ease, background .2s ease;
+    }
+
+    .learn-more:hover {
+      transform: translateY(-1px);
+      background: #292929;
+    }
+
+    @media (max-width: 700px) {
+      .page {
+        padding: 24px 24px 30px;
+      }
+
+      header {
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .brand {
+        min-width: auto;
+      }
+
+      .search {
+        order: 3;
+        width: 150px;
+      }
+
+      nav {
+        gap: 18px;
+      }
+
+      main {
+        min-height: calc(100vh - 105px);
+      }
+
+      h1 {
+        letter-spacing: 5px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        align-items: flex-start;
+      }
+
+      nav {
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 6px;
+      }
+
+      .search {
+        display: none;
+      }
+
+      .hero {
+        margin-top: -30px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="page">
     <header>
-        <h1>SCOCAM</h1>
+      <a class="brand" href="#" aria-label="SCOCAM">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>SCOCAM</span>
+      </a>
+
+      <form class="search" onsubmit="event.preventDefault();">
+        <input type="search" placeholder="What are you looking for?" aria-label="Search">
+        <button type="submit" aria-label="Search">⌕</button>
+      </form>
+
+      <nav aria-label="Main navigation">
+        <a href="#about">ABOUT US</a>
+        <a href="#contact">CONTACT US</a>
+        <a href="#faq">FAQ</a>
+        <a href="#join" class="join">Join</a>
+      </nav>
     </header>
+
+    <main>
+      <section class="hero" aria-labelledby="welcome">
+        <h1 id="welcome">WELCOME</h1>
+        <p class="description">
+          Lorem ipsum dolor sit amet, consectetur adipiscing diam
+          enim non elit euismod tincidunt ut laoreet dolore magna
+          aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
+          nostrud exerci tation ullamcorper suscipit lobortis nisl ut
+          aliquip ex ea commodo consequat.
+        </p>
+        <a class="learn-more" href="#about">LEARN MORE</a>
+      </section>
+    </main>
+  </div>
 </body>
 </html>
